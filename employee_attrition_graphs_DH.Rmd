@@ -1,0 +1,357 @@
+---
+title: "Employee Atrrition graphs_DH"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(readr)
+library(ggplot2)
+```
+
+# loading the data
+```{r}
+# df.csv is the data before special preparations for machine learning, e.g., categorical variables converted to dummy variables.
+df <- read_csv("HR_Employee_Attrition.csv")
+
+
+# This is the data frame that contains the predictions.
+out <- read_csv("out.csv")
+
+colnames(out)[colnames(out) == 'X1'] <- 'EmployeeNumber'
+```
+
+
+```{r}
+# Historic will be the data frame we use to create the graphs comparing quitters with non-quitters.
+historic = df %>% filter(!EmployeeNumber %in% out$EmployeeNumber)
+
+# Current is data about ostensibly current employees.
+# We don't need df's Attrition in the current dataframe. 
+current = subset(df, select=-Attrition) %>% filter(EmployeeNumber %in% out$EmployeeNumber)
+                          #^^^^^^^^^^^^^^^^^^
+                    #  This is simply a list of 
+                    # the current employees' 
+                    # EmployeeNumbers
+current = merge(out[, c("EmployeeNumber", "Name", "Attrition")], current, by="EmployeeNumber")
+
+# write dataframes to csv
+write.csv(current, "current.csv", row.names = FALSE)
+write.csv(historic, "historic.csv", row.names = FALSE)
+```
+
+
+
+# Here I'm creating plots for the historic variables. The purpose of this is to see how, broadly speaking, quitters differ from non-quitters.
+
+# Age
+```{r}
+dataset = historic
+
+library(ggplot2)
+age_graph = ggplot(data=dataset, aes(x=Attrition, y=Age, fill=Attrition))+
+  geom_boxplot(notch=TRUE, outlier.alpha = 0)+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+age_graph
+```
+
+# BusinessTravel graph
+# categorical variable: should categories be sorted, and should attrition be redone as boolean?
+```{r}
+library(ggplot2)
+businesstravel_graph = ggplot(data=dataset, aes(x=BusinessTravel,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+
+businesstravel_graph
+```
+
+# HourlyRate graph
+```{r}
+library(ggplot2)
+hourlyrate_graph = ggplot(data=dataset, aes(x=Attrition, y=HourlyRate, fill=Attrition, group=Attrition))+
+  geom_boxplot(notch=TRUE, outlier.alpha = 0)+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+hourlyrate_graph
+```
+# Department Graph
+
+```{r}
+library(ggplot2)
+department_graph = ggplot(data=dataset, aes(x=Department,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+department_graph
+```
+
+# Education Graph
+```{r}
+library(ggplot2)
+education_graph = ggplot(data=dataset, aes(x=Education,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+education_graph
+
+```
+# EducationField Graph
+```{r}
+library(ggplot2)
+educationfield_graph = ggplot(data=dataset, aes(x=EducationField,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+educationfield_graph
+```
+# EnvironmentSatisfaction Graph
+```{r}
+library(ggplot2)
+environmentsatisfaction_graph = ggplot(data=dataset, aes(x=EnvironmentSatisfaction,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+environmentsatisfaction_graph
+```
+
+# DistanceFromHome graph
+```{r}
+library(ggplot2)
+distancefromhome_graph = ggplot(data=dataset, aes(x=Attrition, y=DistanceFromHome, fill=Attrition))+
+  geom_boxplot(notch=TRUE, outlier.alpha = 0)+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+distancefromhome_graph
+
+```
+# Gender graph
+```{r}
+library(ggplot2)
+gender_graph = ggplot(data=dataset, aes(x=Gender,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+gender_graph
+```
+# HourlyRate graph
+```{r}
+library(ggplot2)
+hourlyrate_graph = 
+
+ggplot(data=dataset, aes(x=Attrition, y=HourlyRate, fill=Attrition))+
+  geom_boxplot(notch=TRUE, outlier.alpha = 0)+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+hourlyrate_graph
+```
+# JobInvolvement graph
+```{r}
+library(ggplot2)
+jobinvolvement_graph = ggplot(data=dataset, aes(x=JobInvolvement,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+jobinvolvement_graph
+
+```
+# JobLevel graph
+```{r}
+library(ggplot2)
+joblevel_graph = ggplot(data=dataset, aes(x=JobLevel,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+joblevel_graph
+
+```
+# JobRole graph
+```{r}
+library(ggplot2)
+jobrole_graph = ggplot(data=dataset, aes(x=JobRole,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+jobrole_graph
+
+```
+# JobSatisfaction graph
+```{r}
+library(ggplot2)
+jobsatisfaction_graph = ggplot(data=dataset, aes(x=JobSatisfaction,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+jobsatisfaction_graph
+
+```
+# MaritalStatus graph
+```{r}
+library(ggplot2)
+maritalstatus_graph = ggplot(data=dataset, aes(x=MaritalStatus,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+maritalstatus_graph
+
+```
+# NumCompaniesWorked graph
+```{r}
+library(ggplot2)
+numcompaniesworked_graph = ggplot(data=dataset, aes(x=NumCompaniesWorked,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+numcompaniesworked_graph
+
+```
+# OverTime graph
+```{r}
+library(ggplot2)
+overtime_graph = ggplot(data=dataset, aes(x=OverTime,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+overtime_graph
+
+```
+
+# PercentSalaryHike graph
+```{r}
+library(ggplot2)
+percentsalaryhike_graph = ggplot(data=dataset, aes(x=PercentSalaryHike,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+percentsalaryhike_graph
+
+```
+# PerformanceRating graph
+```{r}
+library(ggplot2)
+performancerating_graph = ggplot(data=dataset, aes(x=PerformanceRating,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+performancerating_graph
+
+```
+# RealtionshipSatisfaction graph
+```{r}
+library(ggplot2)
+relationshipsatisfaction_graph = ggplot(data=dataset, aes(x=RelationshipSatisfaction,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+relationshipsatisfaction_graph
+
+```
+# StockOptionLevel graph
+```{r}
+library(ggplot2)
+stockoptionlevel_graph = ggplot(data=dataset, aes(x=StockOptionLevel,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+stockoptionlevel_graph
+
+```
+# TotalWorkingYears graph
+```{r}
+library(ggplot2)
+totalworkingyears_graph = 
+
+ggplot(data=dataset, aes(x=Attrition, y=TotalWorkingYears, fill=Attrition))+
+  geom_boxplot(notch=TRUE, outlier.alpha = 0)+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+totalworkingyears_graph
+
+```
+# TrainingTimesLastYear graph
+```{r}
+library(ggplot2)
+trainingtimeslastyear_graph = ggplot(data=dataset, aes(x=TrainingTimesLastYear,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+trainingtimeslastyear_graph
+
+```
+# WorkLifeBalance graph
+```{r}
+library(ggplot2)
+worklifebalance_graph = ggplot(data=dataset, aes(x=WorkLifeBalance,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+worklifebalance_graph
+
+```
+# YearsAtCompany graph ~ categories
+```{r}
+library(ggplot2)
+yearsatcompany_categories_graph = ggplot(data=dataset, aes(x=YearsAtCompany,  fill=Attrition))+
+  geom_bar(position = "fill")+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+yearsatcompany_categories_graph
+
+```
+# YearsAtCompany graph ~ continuous, boxplots
+```{r}
+library(ggplot2)
+totalworkingyears_continuous_graph = 
+
+ggplot(data=dataset, aes(x=Attrition, y=YearsAtCompany, fill=Attrition))+
+  geom_boxplot(notch=TRUE, outlier.alpha = 0)+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+totalworkingyears_continuous_graph
+
+```
+# YearsInCurrentRole graph
+```{r}
+library(ggplot2)
+yearsincurrentrole_graph = 
+
+ggplot(data=dataset, aes(x=Attrition, y=YearsInCurrentRole, fill=Attrition))+
+  geom_boxplot(notch=TRUE, outlier.alpha = 0)+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+yearsincurrentrole_graph
+
+```
+# YearsSinceLastPromotion graph
+```{r}
+library(ggplot2)
+yearssincelastpromotion_graph = 
+
+ggplot(data=dataset, aes(x=Attrition, y=YearsSinceLastPromotion, fill=Attrition))+
+  geom_boxplot(notch=TRUE, outlier.alpha = 0)+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+yearssincelastpromotion_graph
+
+```
+# YearsSinceCurrentManager graph
+```{r}
+library(ggplot2)
+yearswithcurrmanager_graph = 
+
+ggplot(data=dataset, aes(x=Attrition, y=YearsWithCurrManager, fill=Attrition))+
+  geom_boxplot(notch=TRUE, outlier.alpha = 0)+
+  theme_minimal()
+# Notches are used to compare groups; if the notches of two boxes do not overlap, this is a strong evidence that the medians differ.
+yearswithcurrmanager_graph
+
+```
+```{r}
+library(gridExtra)
+
+grid.arrange(businesstravel_graph, department_graph, nrow=2)
+```
+
+
+
